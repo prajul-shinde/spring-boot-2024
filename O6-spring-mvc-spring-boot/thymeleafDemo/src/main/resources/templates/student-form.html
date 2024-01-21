@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Form</title>
+</head>
+<body>
+<form th:action="@{/processStudentForm}" th:object="${student}" method="post">
+
+    First Name: <input type="text" th:field="*{firstName}"><br><br>
+    Last Name: <input type="text" th:field="*{lastName}"><br><br>
+
+    Country:
+    <select th:field="*{country}">
+        <option th:each="tempCountry:${countries}"
+                th:value="${tempCountry}"
+                th:text="${tempCountry}">
+    </select>
+    <br><br>
+    Favorite programming language:
+    <input type="radio" th:field="*{favoriteLanguage}"
+           th:each="tempLang:${languages}"
+           th:value="${tempLang}"
+           th:text="${tempLang}"/>
+    <input type="submit" value="submit">
+    <br><br>
+    Favorite operating system
+    <input type="checkbox" th:field="*{favoriteOs}"
+           th:each="tempOs:${operatingSystems}"
+           th:value="${tempOs}"
+           th:text="${tempOs}"/>
+    <br><br>
+    <input type="submit" value="submit">
+</form>
+</body>
+</html>
