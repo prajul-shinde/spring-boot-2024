@@ -1,6 +1,7 @@
 package com.omsai.restservice.controller;
 
 import com.omsai.restservice.model.BeerDTO;
+import com.omsai.restservice.model.BeerStyle;
 import com.omsai.restservice.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,10 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> listBeers() {
-        return beerService.listBeers();
+    public List<BeerDTO> listBeers(@RequestParam(value = "beerName", required = false) String beerName,
+                                   @RequestParam(required = false) BeerStyle beerStyle,
+                                   @RequestParam(required = false) Boolean showInventory) {
+        return beerService.listBeers(beerName, beerStyle, showInventory);
     }
 
     @GetMapping(BEER_PATH_ID)
