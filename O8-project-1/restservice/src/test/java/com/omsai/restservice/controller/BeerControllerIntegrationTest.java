@@ -30,6 +30,8 @@ import static com.omsai.restservice.controller.BeerController.BEER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,14 +57,21 @@ class BeerControllerIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    public static final String username = "user";
+    public static final String password = "password";
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(wac)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
     void testListBeersByName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerName", "IPA")
                         .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -73,6 +82,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByStyleAndNameShowInventoryFalse() throws Exception {
 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "false")
@@ -86,6 +96,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByStyleAndNameShowInventoryTrue() throws Exception {
 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
@@ -99,6 +110,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
@@ -113,6 +125,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByStyleAndName() throws Exception {
 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("pageSize", "800"))
@@ -124,6 +137,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByStyle() throws Exception {
 
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(username, password))
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -246,6 +260,7 @@ class BeerControllerIntegrationTest {
         beerMap.put("beerName", "New Namesdhhbfjsbdcnsk dcjjd fcvjs sd chs dhcbhsdbchskaksjbdhc hd cshdbchusb js dh shchebcbehcbecc");
 
         MvcResult mvcResult = mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(username, password))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
