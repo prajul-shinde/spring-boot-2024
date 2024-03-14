@@ -13,6 +13,12 @@ public class RestTemplateBuilderConfig {
     @Value("${rest.template.rootUrl}")
     private String rootUrl;
 
+    @Value("${rest.template.username}")
+    private String useraname;
+
+    @Value("${rest.template.password}")
+    private String password;
+
     @Bean
     RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer) {
 
@@ -20,6 +26,8 @@ public class RestTemplateBuilderConfig {
         RestTemplateBuilder builder = configurer.configure(new RestTemplateBuilder());
         DefaultUriBuilderFactory uriBuilderFactory = new
                 DefaultUriBuilderFactory(rootUrl);
-        return builder.uriTemplateHandler(uriBuilderFactory);
+
+        RestTemplateBuilder builderWithAuth = builder.basicAuthentication(useraname, password);
+        return builderWithAuth.uriTemplateHandler(uriBuilderFactory);
     }
 }
