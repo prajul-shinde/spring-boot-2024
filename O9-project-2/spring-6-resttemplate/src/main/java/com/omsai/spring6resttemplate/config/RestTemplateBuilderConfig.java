@@ -23,11 +23,10 @@ public class RestTemplateBuilderConfig {
     RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer) {
 
         assert rootUrl != null;
-        RestTemplateBuilder builder = configurer.configure(new RestTemplateBuilder());
-        DefaultUriBuilderFactory uriBuilderFactory = new
-                DefaultUriBuilderFactory(rootUrl);
 
-        RestTemplateBuilder builderWithAuth = builder.basicAuthentication(useraname, password);
-        return builderWithAuth.uriTemplateHandler(uriBuilderFactory);
+        return configurer
+                .configure(new RestTemplateBuilder())
+                .basicAuthentication(useraname, password)
+                .uriTemplateHandler(new DefaultUriBuilderFactory(rootUrl));
     }
 }
