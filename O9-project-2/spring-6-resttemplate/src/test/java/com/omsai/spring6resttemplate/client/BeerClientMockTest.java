@@ -73,7 +73,7 @@ public class BeerClientMockTest {
     void testListBeersWithQueryParam() throws JsonProcessingException {
 
         String response = objectMapper.writeValueAsString(getBeerDTOPage());
-        URI uri = UriComponentsBuilder.fromHttpUrl(URL+BeerClientImpl.GET_BEER_PATH)
+        URI uri = UriComponentsBuilder.fromHttpUrl(URL + BeerClientImpl.GET_BEER_PATH)
                 .queryParam("beerName", "Ale")
                 .build().toUri();
 
