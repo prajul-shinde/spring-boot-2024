@@ -51,6 +51,12 @@ public class BeerClientMockTest {
 
     String dtoJson;
 
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilderConfigured;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() throws JsonProcessingException {
 
@@ -63,11 +69,22 @@ public class BeerClientMockTest {
         dtoJson = objectMapper.writeValueAsString(dto);
     }
 
-    @Autowired
-    private RestTemplateBuilder restTemplateBuilderConfigured;
+    @Test
+    void testListBeersWithQueryParam() throws JsonProcessingException {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        String response = objectMapper.writeValueAsString(getBeerDTOPage());
+        URI uri = UriComponentsBuilder.fromHttpUrl(URL+BeerClientImpl.GET_BEER_PATH)
+                .queryParam("beerName", "Ale")
+                .build().toUri();
+
+        server.expect(method(HttpMethod.GET))
+                .andExpect(requestTo(uri))
+                .andExpect(queryParam("beerName", "Ale"))
+                .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
+
+        Page<BeerDTO> beerDTOS = beerClient.listBeers("Ale", null, null, null, null);
+        assertThat(beerDTOS.getContent().size()).isEqualTo(1);
+    }
 
     @Test
     void testDeleteBeer() {
