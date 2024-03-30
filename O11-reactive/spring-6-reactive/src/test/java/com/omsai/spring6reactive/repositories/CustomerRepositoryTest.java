@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 
 @DataR2dbcTest
 @Import(DatabaseConfig.class)
-class CustomerRepositoryTest {
+public class CustomerRepositoryTest {
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -28,7 +28,7 @@ class CustomerRepositoryTest {
         customerRepository.save(getTestCustomer()).subscribe(savedCustomer -> System.out.println(savedCustomer.toString()));
     }
 
-    private Customer getTestCustomer() {
+    public static Customer getTestCustomer() {
 
         return Customer.builder()
                 .customerName("prajul")
