@@ -1,5 +1,6 @@
 package com.omsai.spring6reactive.model;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ public class CustomerDTO {
 
 
     private Integer id;
+    @NotBlank
     @Size(max = 255)
     private String customerName;
     private LocalDateTime createdDate;

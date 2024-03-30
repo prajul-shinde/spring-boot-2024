@@ -1,5 +1,6 @@
 package com.omsai.spring6reactive.controllers;
 
+import com.omsai.spring6reactive.domain.Customer;
 import com.omsai.spring6reactive.model.CustomerDTO;
 import com.omsai.spring6reactive.repositories.CustomerRepositoryTest;
 import org.junit.jupiter.api.MethodOrderer;
@@ -49,6 +50,16 @@ class CustomerControllerTest {
 
     @Test
     @Order(3)
+    void testGetCustomerByIdNotFound() {
+
+        webTestClient.get().uri(CustomerController.CUSTOMER_PATH_ID, 99)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
+    @Test
+    @Order(4)
     void testSaveNewCustomer() {
 
         webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
@@ -61,7 +72,19 @@ class CustomerControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
+    void testSaveNewCustomerBadRequest() {
+        Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
+        testCustomer.setCustomerName("");
+        webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
+                .body(Mono.just(testCustomer), CustomerDTO.class)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
+
+    @Test
+    @Order(6)
     void testUpdateCustomer() {
 
         webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 1)
@@ -72,7 +95,30 @@ class CustomerControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(7)
+    void testUpdateCustomerNotFound() {
+
+        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 999)
+                .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
+    @Test
+    @Order(8)
+    void testUpdateCustomerBadRequest() {
+        Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
+        testCustomer.setCustomerName("");
+        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID, 1)
+                .body(Mono.just(testCustomer), CustomerDTO.class)
+                .exchange()
+                .expectStatus()
+                .isBadRequest();
+    }
+
+    @Test
+    @Order(9)
     void testDeleteCustomerById() {
 
         webTestClient.delete()
@@ -80,5 +126,27 @@ class CustomerControllerTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
+    }
+
+    @Test
+    @Order(10)
+    void testPatchNotFound() {
+
+        webTestClient.patch().uri(CustomerController.CUSTOMER_PATH_ID, 999)
+                .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
+
+    @Test
+    @Order(11)
+    void testDeleteCustomerByIdNotFound() {
+
+        webTestClient.delete()
+                .uri(CustomerController.CUSTOMER_PATH_ID, 123)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
     }
 }
