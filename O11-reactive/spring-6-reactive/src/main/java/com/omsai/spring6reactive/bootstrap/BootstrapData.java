@@ -1,7 +1,9 @@
 package com.omsai.spring6reactive.bootstrap;
 
 import com.omsai.spring6reactive.domain.Beer;
+import com.omsai.spring6reactive.domain.Customer;
 import com.omsai.spring6reactive.repositories.BeerRepository;
+import com.omsai.spring6reactive.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -14,13 +16,30 @@ import java.time.LocalDateTime;
 public class BootstrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
 
         loadBeerData();
+        loadCustomerData();
         beerRepository.count().subscribe(count -> {
-            System.out.println("Count is: " + count);
+            System.out.println("Beer Count is: " + count);
+        });
+        customerRepository.count().subscribe((count -> {
+            System.out.println("Customer Count is: " + count);
+        }));
+    }
+
+    private void loadCustomerData() {
+
+        customerRepository.count().subscribe(count -> {
+            if (count == 0) {
+
+                customerRepository.save(Customer.builder().customerName("prajul").build()).subscribe();
+                customerRepository.save(Customer.builder().customerName("onkar").build()).subscribe();
+                customerRepository.save(Customer.builder().customerName("pradnya").build()).subscribe();
+            }
         });
     }
 
