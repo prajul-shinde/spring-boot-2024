@@ -6,21 +6,21 @@ import reactor.core.publisher.Mono;
 
 public interface BeerService {
 
-    Flux<BeerDTO> listBeers();
-
-    Mono<BeerDTO> saveNewBeer(BeerDTO beerDTO);
-
-    Mono<BeerDTO> getById(final String id);
-
-    Mono<BeerDTO> updateBeer(final String id, BeerDTO beerDTO);
-
-    Mono<BeerDTO> patchBeer(final String id, BeerDTO beerDTO);
-
-    Mono<Void> deleteById(final String id);
-
     Mono<BeerDTO> findFirstByBeerName(String beerName);
 
     Flux<BeerDTO> findByBeerStyle(String beerStyle);
+    Flux<BeerDTO> listBeers();
+    Mono<BeerDTO> saveBeer(Mono<BeerDTO> beerDto);
+
+    Mono<BeerDTO> saveBeer(BeerDTO beerDTO);
+    Mono<BeerDTO> getById(String beerId);
+
+    Mono<BeerDTO> updateBeer(String beerId, BeerDTO beerDTO);
+
+    Mono<BeerDTO> patchBeer(String beerId, BeerDTO beerDTO);
+
+    Mono<Void> deleteBeerById(String beerId);
+
 
 
 }
